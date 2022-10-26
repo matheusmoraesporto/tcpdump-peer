@@ -1,0 +1,10 @@
+# github.com/google/gopacket v1.1.19
+## explicit
+github.com/google/gopacket
+github.com/google/gopacket/layers
+github.com/google/gopacket/pcap
+# github.com/thebagchi/sctp-go v1.1.0
+## explicit
+github.com/thebagchi/sctp-go
+# golang.org/x/sys v0.0.0-20190412213103-97732733099d
+golang.org/x/sys/windows
