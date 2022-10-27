@@ -3,76 +3,62 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
-	"os"
 	"syscall"
+	"unisinos/redes-i/tgb/common"
 
 	sctp "github.com/thebagchi/sctp-go"
 )
 
-func HandleClient(conn *sctp.SCTPConn) {
-	var (
-		data = make([]byte, 8192)
-		flag = 0
-	)
+func main() {
+	addr, err := sctp.MakeSCTPAddr(common.SCTPNetowrk, "127.0.0.1:12345")
+	if err != nil {
+		fmt.Println("Erro:", err)
+		return
+	}
+
+	initMsg := common.NewSCTPInitMessage()
+	server, err := sctp.ListenSCTP(common.SCTPNetowrk, syscall.SOCK_STREAM, addr, &initMsg)
+	if err != nil {
+		fmt.Println("Erro:", err)
+		return
+	}
+	defer server.Close()
+
+	for {
+		// Aguarda um conexão
+		conn, err := server.AcceptSCTP()
+		if err != nil {
+			fmt.Println("Error:", err)
+			continue
+		}
+		// Conexão encontrada
+		if remote := conn.RemoteAddr(); nil != remote {
+			fmt.Println("Conexão estabelecida com o endereço:", remote)
+		}
+		// obtém os dados recebidos do client
+		go handleClient(conn)
+	}
+}
+
+func handleClient(conn *sctp.SCTPConn) {
+	data := make([]byte, 8192)
+	flag := 0
+
 	for {
 		info := &sctp.SCTPSndRcvInfo{}
 		len, err := conn.RecvMsg(data, info, &flag)
-		if nil != err {
-			fmt.Println("Error: ", err)
+		if err != nil {
+			fmt.Println("Error:", err)
 			break
 		}
 		if len == 0 {
-			fmt.Println("Connection terminated!!!")
+			fmt.Println("Conexão encerrada!")
 			break
 		} else {
 			fmt.Println(fmt.Sprintf("Rcvd %d bytes", len))
 			buffer := data[:len]
-			fmt.Println(hex.Dump(buffer))
+			fmt.Println(string(buffer))
 			fmt.Println(hex.Dump(sctp.Pack(info)))
 		}
-	}
-}
-
-func main() {
-	addr, err := sctp.MakeSCTPAddr("sctp4", "127.0.0.1:12345")
-	if nil != err {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
-	}
-
-	server, err := sctp.ListenSCTP(
-		"sctp4",
-		syscall.SOCK_STREAM,
-		addr,
-		&sctp.SCTPInitMsg{
-			NumOutStreams:  0xffff,
-			MaxInStreams:   0,
-			MaxAttempts:    0,
-			MaxInitTimeout: 0,
-		},
-	)
-	if nil != err {
-		fmt.Println("Error: ", err)
-		os.Exit(2)
-	}
-
-	defer server.Close()
-
-	if local := server.Addr(); nil != local {
-		fmt.Println("Addr: ", local)
-	} else {
-		fmt.Println("Error: local addr not received")
-	}
-
-	for {
-		conn, err := server.AcceptSCTP()
-		if nil != err {
-			fmt.Println("Error: ", err)
-			continue
-		}
-		if remote := conn.RemoteAddr(); nil != remote {
-			fmt.Println("New connection from: ", remote)
-		}
-		go HandleClient(conn)
 	}
 }

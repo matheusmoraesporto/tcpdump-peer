@@ -1,10 +1,15 @@
 package main
 
-import "fmt"
-
-// when pwd = /root/go/src/unisinos/redes-i/tga
-// go run ./main.go ./connections/addresses.json
+import (
+	"fmt"
+	"unisinos/redes-i/tgb/connections"
+)
 
 func main() {
-	fmt.Println("hello")
+	connList, err := connections.GetConnections("./connections/addresses.json")
+	if err != nil {
+		return
+	}
+
+	fmt.Println(connList)
 }
