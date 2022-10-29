@@ -6,9 +6,10 @@ import (
 	"net"
 	"strings"
 	"time"
+	"unisinos/redes-i/tgb/connection"
 )
 
-func (_ ConnectionTCP) RunServer(ip string, port int, portResponse int) {
+func (_ ConnectionTCP) RunServer(ip string, port int, responseConnections []connection.Connection) {
 	addr := fmt.Sprintf("%s:%d", ip, port)
 	l, err := net.Listen("tcp", addr)
 	if err != nil {

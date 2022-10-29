@@ -5,11 +5,11 @@ import (
 	"net"
 	"strings"
 
-	"unisinos/redes-i/tga/common"
+	"unisinos/redes-i/tgb/connection"
 	"unisinos/redes-i/tgb/sniffer"
 )
 
-func (_ ConnectionUDP) RunServer(ip string, port int, portResponse int) {
+func (_ ConnectionUDP) RunServer(ip string, port int, responseConnections []connection.Connection) {
 	address := net.UDPAddr{
 		Port: port,
 		IP:   net.ParseIP(ip),
@@ -32,9 +32,13 @@ func (_ ConnectionUDP) RunServer(ip string, port int, portResponse int) {
 
 		// se o buffer for GET significa que há um servidor pedindo para ser sniffado
 		// então podemos iniciar o sniffer para enviar a response
-		if strings.Contains(string(buf), common.RequestSniff) {
+		if strings.Contains(string(buf), RequestSniff) {
 			fmt.Printf("O endereço %s:%d solicitou sniffer de pacotes\n", remoteaddr.IP.String(), remoteaddr.Port)
-			remoteaddr.Port = portResponse
+			for _, c := range responseConnections {
+				if c.Ip == remoteaddr.IP.String() {
+					remoteaddr.Port = c.ServerPort
+				}
+			}
 			sendResponse(server, remoteaddr)
 		} else { // caso contrário, estamos recebendo os dados sniffados de outro servidor
 			printSniffedPackets(remoteaddr, string(buf))

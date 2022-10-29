@@ -32,7 +32,7 @@ func main() {
 	var wg sync.WaitGroup
 	for _, c := range connList {
 		if c.Ip == localAddr.Ip {
-			go protocol.RunServer(c.Ip, c.ServerPort, c.ClientPort)
+			go protocol.RunServer(c.Ip, c.ServerPort, connList)
 		} else {
 			go protocol.RunClient(c.Ip, c.ClientPort)
 		}
