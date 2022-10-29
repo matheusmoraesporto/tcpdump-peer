@@ -16,8 +16,7 @@ func (_ ConnectionUDP) RunClient(ip string, port int) {
 	}
 
 	fmt.Fprintf(netConn, RequestSniff)
-	_, err = bufio.NewReader(netConn).Read(buf)
-	if err != nil {
+	if _, err = bufio.NewReader(netConn).Read(buf); err != nil {
 		fmt.Printf("Ocorreu um error: %v\n", err)
 		panic(err)
 	}

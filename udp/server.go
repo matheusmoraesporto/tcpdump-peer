@@ -1,7 +1,6 @@
 package udp
 
 import (
-	"encoding/json"
 	"fmt"
 	"net"
 	"strings"
@@ -9,8 +8,6 @@ import (
 	"unisinos/redes-i/tga/common"
 	"unisinos/redes-i/tgb/sniffer"
 )
-
-const lenSniffPackets = 10
 
 func (_ ConnectionUDP) RunServer(ip string, port int, portResponse int) {
 	address := net.UDPAddr{
@@ -27,7 +24,7 @@ func (_ ConnectionUDP) RunServer(ip string, port int, portResponse int) {
 	buf := make([]byte, BufferLength)
 	fmt.Printf("Servidor rodando no endereço %s:%d\n", ip, port)
 	for {
-		n, remoteaddr, err := server.ReadFromUDP(buf) // bloqueante
+		_, remoteaddr, err := server.ReadFromUDP(buf) // bloqueante
 		if err != nil {
 			fmt.Printf("Ocorreu um erro: %v", err)
 			continue
@@ -40,24 +37,14 @@ func (_ ConnectionUDP) RunServer(ip string, port int, portResponse int) {
 			remoteaddr.Port = portResponse
 			sendResponse(server, remoteaddr)
 		} else { // caso contrário, estamos recebendo os dados sniffados de outro servidor
-			var pkt sniffer.SniffedPacket
-			json.Unmarshal(buf[:n], &pkt)
-			printSniffedPackets(remoteaddr, pkt)
+			printSniffedPackets(remoteaddr, string(buf))
 		}
 	}
 }
 
 func sendResponse(conn *net.UDPConn, addr *net.UDPAddr) {
-	for i := 0; i < lenSniffPackets; i++ {
-		pkts := sniffer.Sniff()
-		pktJson, err := json.Marshal(pkts)
-		if err != nil {
-			fmt.Printf("Erro ao tratar os dados sniffados: %v", err)
-			return
-		}
-
-		_, err = conn.WriteToUDP(pktJson, addr)
-		if err != nil {
+	for _, pkt := range sniffer.Sniff() {
+		if _, err := conn.WriteToUDP([]byte(pkt), addr); err != nil {
 			fmt.Printf("Erro ao enviar a resposta: %v", err)
 			return
 		}
@@ -66,14 +53,8 @@ func sendResponse(conn *net.UDPConn, addr *net.UDPAddr) {
 	}
 }
 
-func printSniffedPackets(addr *net.UDPAddr, pkt sniffer.SniffedPacket) {
+func printSniffedPackets(addr *net.UDPAddr, pkt string) {
 	fmt.Println("=============================================================")
-	fmt.Printf("Pacote sniffado e recebido pelo endereço: %s\n\n", addr.IP)
-	fmt.Printf("Endereço que enviou o pacote: %s\n", pkt.OriginAddress)
-	fmt.Printf("Endereço que recebeu o pacote: %s\n", pkt.DestinyAddress)
-	fmt.Printf("Protocolo da mensagem: %s\n", pkt.Protocol)
-	fmt.Printf("Tamanho do pacote: %dbytes\n", pkt.Length)
-	fmt.Printf("Tipo de IP: %s\n", pkt.IpType)
-	fmt.Printf("Checksum do cabeçalho de transporte: %d\n", pkt.Checksum)
+	fmt.Printf("Pacote sniffado e recebido pelo endereço: %s\n\n%s\n", addr.IP, pkt)
 	fmt.Println("=============================================================")
 }

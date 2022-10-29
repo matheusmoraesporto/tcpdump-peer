@@ -1,7 +1,7 @@
 package udp
 
 const (
-	BufferLength = 6056
+	BufferLength = 1000
 	RequestSniff = "REQUEST_SNIFF"
 	UDP          = "udp"
 )
