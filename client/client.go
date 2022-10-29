@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"fmt"
@@ -8,7 +8,16 @@ import (
 )
 
 func main() {
-	clientAddr, err := sctp.MakeSCTPAddr(common.SCTPNetowrk, "127.0.0.1:54321")
+	run("127.0.0.1", 54321)
+}
+
+func RunClient(ip string, port int) {
+	run(ip, port)
+}
+
+func run(ip string, port int) {
+	addr := fmt.Sprintf("%s:%d", ip, port)
+	clientAddr, err := sctp.MakeSCTPAddr(common.SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro:", err)
 		return

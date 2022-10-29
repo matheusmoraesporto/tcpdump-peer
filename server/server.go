@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/hex"
@@ -10,7 +10,16 @@ import (
 )
 
 func main() {
-	addr, err := sctp.MakeSCTPAddr(common.SCTPNetowrk, "127.0.0.1:12345")
+	run("127.0.0.1", 12345)
+}
+
+func RunServer(ip string, port int) {
+	run(ip, port)
+}
+
+func run(ip string, port int) {
+	staddr := fmt.Sprintf("%s:%d", ip, port)
+	addr, err := sctp.MakeSCTPAddr(common.SCTPNetowrk, staddr)
 	if err != nil {
 		fmt.Println("Erro:", err)
 		return
