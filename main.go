@@ -18,34 +18,21 @@ func main() {
 		return
 	}
 
-	connList, err := connection.GetConnections("./connection/addresses.json")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	localAddr, err := connection.GetLocalAddress(connList)
+	server, clients, err := connection.GetConnections("./connection/addresses.json")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	var wg sync.WaitGroup
-	for _, c := range connList {
-		if c.Ip == localAddr.Ip {
-			go protocol.RunServer(c.Ip, c.ServerPort, connList)
-			wg.Add(1)
-			break
-		}
-	}
+	protocol.RunServer(server.Ip, server.ServerPort, clients)
+	wg.Add(1)
 
 	time.Sleep(time.Second * 10)
 
-	for _, c := range connList {
-		if c.Ip != localAddr.Ip {
-			go protocol.RunClient(c.Ip, c.ServerPort)
-			wg.Add(1)
-		}
+	for _, c := range clients {
+		go protocol.RunClient(c.Ip, c.ClientPort)
+		wg.Add(1)
 	}
 
 	wg.Wait()

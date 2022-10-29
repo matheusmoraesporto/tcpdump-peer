@@ -14,7 +14,7 @@ type Connection struct {
 	ClientPort int    `json:"clientPort"`
 }
 
-func GetConnections(filePath string) (connections []Connection, err error) {
+func GetConnections(filePath string) (server Connection, clients []Connection, err error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		err = fmt.Errorf("Erro: %v\n", err)
@@ -28,26 +28,33 @@ func GetConnections(filePath string) (connections []Connection, err error) {
 		return
 	}
 
-	json.Unmarshal(byteValue, &connections)
-	return
+	var connections []Connection
+	err = json.Unmarshal(byteValue, &connections)
+	if err != nil {
+		return Connection{}, nil, err
+	}
+
+	return GetServerClients(connections)
 }
 
-func GetLocalAddress(connections []Connection) (Connection, error) {
+func GetServerClients(connections []Connection) (server Connection, clients []Connection, err error) {
 	hostname, err := os.Hostname()
 	if err != nil {
-		return Connection{}, fmt.Errorf("Erro ao obter o hostname: %v", err)
+		return Connection{}, nil, fmt.Errorf("Erro ao obter o hostname: %v", err)
 	}
 
 	localAddrs, err := net.LookupHost(hostname)
 	if err != nil || len(localAddrs) < 1 {
-		return Connection{}, fmt.Errorf("Erro ao tentar identificar o endereço local: %v\n", err)
+		return Connection{}, nil, fmt.Errorf("Erro ao tentar identificar o endereço local: %v\n", err)
 	}
 
 	for _, c := range connections {
 		if c.Ip == localAddrs[0] {
-			return c, nil
+			server = c
+		} else {
+			clients = append(clients, c)
 		}
 	}
 
-	return Connection{}, fmt.Errorf("Nenhum endereço foi encontrado para este ip\n")
+	return
 }
