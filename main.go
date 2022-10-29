@@ -1,21 +1,29 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"sync"
-	"unisinos/redes-i/tgb/client"
-	"unisinos/redes-i/tgb/connections"
-	"unisinos/redes-i/tgb/server"
+	"unisinos/redes-i/tgb/connection"
 )
 
 func main() {
-	connList, err := connections.GetConnections("./connections/addresses.json")
+	protocolFlag := flag.String("protocol", "", "")
+	flag.Parse()
+
+	protocol := indetifyProtocol(*protocolFlag)
+	if protocol == nil {
+		fmt.Printf("Protocolo não identificado: %s\n", *protocolFlag)
+		return
+	}
+
+	connList, err := connection.GetConnections("./connection/addresses.json")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	localIp, err := connections.GetLocalIp()
+	localAddr, err := connection.GetLocalAddress(connList)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -23,12 +31,25 @@ func main() {
 
 	var wg sync.WaitGroup
 	for _, c := range connList {
-		if c.Ip == localIp {
-			go server.RunServer(c.Ip, c.ServerPort)
+		if c.Ip == localAddr.Ip {
+			go protocol.RunServer(c.Ip, c.ServerPort, c.ClientPort)
 		} else {
-			go client.RunClient(c.Ip, c.ClientPort)
+			go protocol.RunClient(c.Ip, c.ClientPort)
 		}
 		wg.Add(1)
 	}
 	wg.Wait()
+}
+
+func indetifyProtocol(flag string) (p Protocol) {
+	switch flag {
+	case "tcp":
+		return NewTCP()
+	case "udp":
+		return NewUDP()
+	case "sctp":
+		return NewTCP()
+	default:
+		return nil
+	}
 }
