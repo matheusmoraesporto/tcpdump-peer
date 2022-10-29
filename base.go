@@ -12,14 +12,15 @@ type Protocol interface {
 	RunServer(ip string, port int, responseConnections []connection.Connection)
 }
 
-func NewTCP() (p Protocol) {
-	return tcp.ConnectionTCP{}
-}
-
-func NewUDP() (p Protocol) {
-	return udp.ConnectionUDP{}
-}
-
-func NewSCTP() (p Protocol) {
-	return sctp.ConnectionSCTP{}
+func NewProtocol(flag string) (p Protocol) {
+	switch flag {
+	case "tcp":
+		return tcp.ConnectionTCP{}
+	case "udp":
+		return udp.ConnectionUDP{}
+	case "sctp":
+		return sctp.ConnectionSCTP{}
+	default:
+		return nil
+	}
 }
