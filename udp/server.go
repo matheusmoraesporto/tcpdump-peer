@@ -53,7 +53,7 @@ func sendResponse(conn *net.UDPConn, addr *net.UDPAddr) {
 			return
 		}
 
-		fmt.Println("Pacote enviado.")
+		fmt.Printf("Pacote enviado para o endereço %s:%d.\n", addr.IP, addr.Port)
 	}
 }
 
