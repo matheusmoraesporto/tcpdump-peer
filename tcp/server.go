@@ -23,12 +23,14 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 		return
 	}
 
-	for {
-		netData, err := bufio.NewReader(connection).ReadString('\n')
-		if err != nil {
-			fmt.Println(err)
-			return
+	go func(c net.Conn) {
+		for {
+			netData, err := bufio.NewReader(c).ReadString('\n')
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Print("MENSAGEM RECEBIDA: ", string(netData))
 		}
-		fmt.Print("MENSAGEM RECEBIDA: ", string(netData))
-	}
+	}(connection)
 }
