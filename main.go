@@ -33,7 +33,9 @@ func main() {
 	}
 
 	for _, c := range remotes {
+		fmt.Printf("client para %s\n", c.Ip)
 		protocol.RunClient(local.Ip, c.Ip, local.ClientPort, c.ServerPort)
+		fmt.Printf("client para %s\n DONE", c.Ip)
 	}
 
 	wg.Wait()
