@@ -17,6 +17,7 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 		return
 	}
 
+	fmt.Printf("Comunicando-se com o endereço %s\n", connection.RemoteAddr())
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print(">> ")

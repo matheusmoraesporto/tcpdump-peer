@@ -18,6 +18,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 	}
 	defer listener.Close()
 
+	fmt.Printf("Servidor executando no endereço %s\n", addr.String())
 	connection, err := listener.Accept()
 	if err != nil {
 		fmt.Println(err)
