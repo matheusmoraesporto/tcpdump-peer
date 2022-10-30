@@ -6,15 +6,15 @@ import (
 	sctp "github.com/thebagchi/sctp-go"
 )
 
-func (_ ConnectionSCTP) RunClient(senderIp string, senderPort int) {
-	addr := fmt.Sprintf("%s:%d", "127.0.0.3", 1234) // TODO
+func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
+	addr := fmt.Sprintf("%s:%d", ipLocal, portLocal)
 	clientAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro:", err)
 		return
 	}
 
-	addr = fmt.Sprintf("%s:%d", senderIp, senderPort)
+	addr = fmt.Sprintf("%s:%d", ipRemote, portRemote)
 	serverAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro:", err)

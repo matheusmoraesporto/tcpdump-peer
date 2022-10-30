@@ -8,7 +8,7 @@ import (
 )
 
 type Protocol interface {
-	RunClient(ip string, port int)
+	RunClient(ipLocal, ipRemote string, portLocal, portRemote int)
 	RunServer(ip string, port int, responseConnections []address.Address)
 }
 

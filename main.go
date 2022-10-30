@@ -18,22 +18,22 @@ func main() {
 		return
 	}
 
-	server, clients, err := address.GetConnections("./address/addresses.json")
+	local, remotes, err := address.GetConnections("./address/addresses.json")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	var wg sync.WaitGroup
-	go protocol.RunServer(server.Ip, server.ServerPort, clients)
+	go protocol.RunServer(local.Ip, local.ServerPort, remotes)
 	wg.Add(1)
 
 	select {
 	case <-time.After(time.Second * 10):
 	}
 
-	for _, c := range clients {
-		go protocol.RunClient(c.Ip, c.ServerPort)
+	for _, c := range remotes {
+		go protocol.RunClient(local.Ip, c.Ip, local.ClientPort, c.ServerPort)
 		wg.Add(1)
 	}
 
