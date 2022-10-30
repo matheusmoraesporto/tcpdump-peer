@@ -15,6 +15,8 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 		return
 	}
 
+	defer connection.Close()
+
 	// for {
 	// escrevendo a mensagem na conexão (socket)
 	fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String()))
