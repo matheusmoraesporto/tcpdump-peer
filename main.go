@@ -34,7 +34,6 @@ func main() {
 
 	for _, c := range remotes {
 		protocol.RunClient(local.Ip, c.Ip, local.ClientPort, c.ServerPort)
-		// wg.Add(1)
 	}
 
 	wg.Wait()
