@@ -8,5 +8,10 @@
         "ip": "172.17.0.4",
         "serverPort": 7171,
         "clientPort": 1717
+    },
+    {
+        "ip": "172.17.0.5",
+        "serverPort": 8383,
+        "clientPort": 3838
     }
 ]
