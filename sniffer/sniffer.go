@@ -22,6 +22,7 @@ func Sniff() (pkts []string) {
 	}
 	defer handle.Close()
 
+	fmt.Printf("A captura de pacotes iniciou, aguarde até que %d pacotes sejam capturados\n", lenSniffPackets)
 	packets := gopacket.NewPacketSource(handle, handle.LinkType()).Packets()
 	for pkt := range packets {
 		pkts = append(pkts, pkt.String())

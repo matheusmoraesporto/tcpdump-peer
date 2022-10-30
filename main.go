@@ -33,7 +33,6 @@ func main() {
 	}
 
 	for _, c := range clients {
-		fmt.Printf("Ip=%s\nPort=%d\n\n", c.Ip, c.ClientPort)
 		go protocol.RunClient(c.Ip, c.ServerPort)
 		wg.Add(1)
 	}
