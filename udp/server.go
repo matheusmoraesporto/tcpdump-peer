@@ -46,16 +46,16 @@ func (_ ConnectionUDP) RunServer(ip string, port int, responseAddresses []addres
 }
 
 func sendResponse(conn *net.UDPConn, addr *net.UDPAddr) {
-	go func() {
-		for _, pkt := range sniffer.Sniff() {
-			if _, err := conn.WriteToUDP([]byte(pkt), addr); err != nil {
-				fmt.Printf("Erro ao enviar a resposta: %v", err)
-				return
-			}
-
-			fmt.Printf("Pacote enviado para o endereço %s:%d.\n", addr.IP, addr.Port)
+	// go func() {
+	for _, pkt := range sniffer.Sniff() {
+		if _, err := conn.WriteToUDP([]byte(pkt), addr); err != nil {
+			fmt.Printf("Erro ao enviar a resposta: %v", err)
+			return
 		}
-	}()
+
+		fmt.Printf("Pacote enviado para o endereço %s:%d.\n", addr.IP, addr.Port)
+	}
+	// }()
 }
 
 func printSniffedPackets(addr *net.UDPAddr, pkt string) {
