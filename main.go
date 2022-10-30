@@ -25,12 +25,15 @@ func main() {
 	}
 
 	var wg sync.WaitGroup
-	protocol.RunServer(server.Ip, server.ServerPort, clients)
+	go protocol.RunServer(server.Ip, server.ServerPort, clients)
 	wg.Add(1)
 
-	time.Sleep(time.Second * 10)
+	select {
+	case <-time.After(time.Second * 5):
+	}
 
 	for _, c := range clients {
+		fmt.Printf("Ip=%s\nPort=%d", c.Ip, c.ClientPort)
 		go protocol.RunClient(c.Ip, c.ClientPort)
 		wg.Add(1)
 	}
