@@ -4,12 +4,12 @@ import (
 	"encoding/hex"
 	"fmt"
 	"syscall"
-	"unisinos/redes-i/tgb/connection"
+	"unisinos/redes-i/tgb/address"
 
 	sctp "github.com/thebagchi/sctp-go"
 )
 
-func (_ ConnectionSCTP) RunServer(ip string, port int, responseConnections []connection.Connection) {
+func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []address.Address) {
 	staddr := fmt.Sprintf("%s:%d", ip, port)
 	addr, err := sctp.MakeSCTPAddr(SCTPNetowrk, staddr)
 	if err != nil {

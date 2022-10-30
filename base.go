@@ -1,7 +1,7 @@
 package main
 
 import (
-	"unisinos/redes-i/tgb/connection"
+	"unisinos/redes-i/tgb/address"
 	"unisinos/redes-i/tgb/sctp"
 	"unisinos/redes-i/tgb/tcp"
 	"unisinos/redes-i/tgb/udp"
@@ -9,7 +9,7 @@ import (
 
 type Protocol interface {
 	RunClient(ip string, port int)
-	RunServer(ip string, port int, responseConnections []connection.Connection)
+	RunServer(ip string, port int, responseConnections []address.Address)
 }
 
 func NewProtocol(flag string) (p Protocol) {

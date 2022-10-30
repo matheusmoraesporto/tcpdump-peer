@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
-	"unisinos/redes-i/tgb/connection"
+	"unisinos/redes-i/tgb/address"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	server, clients, err := connection.GetConnections("./connection/addresses.json")
+	server, clients, err := address.GetConnections("./address/addresses.json")
 	if err != nil {
 		fmt.Println(err)
 		return

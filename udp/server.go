@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"net"
 	"strings"
-
-	"unisinos/redes-i/tgb/connection"
+	"unisinos/redes-i/tgb/address"
 	"unisinos/redes-i/tgb/sniffer"
 )
 
-func (_ ConnectionUDP) RunServer(ip string, port int, responseConnections []connection.Connection) {
+func (_ ConnectionUDP) RunServer(ip string, port int, responseAddresses []address.Address) {
 	address := net.UDPAddr{
 		Port: port,
 		IP:   net.ParseIP(ip),
@@ -34,9 +33,9 @@ func (_ ConnectionUDP) RunServer(ip string, port int, responseConnections []conn
 		// então podemos iniciar o sniffer para enviar a response
 		if strings.Contains(string(buf), RequestSniff) {
 			fmt.Printf("O endereço %s:%d solicitou sniffer de pacotes\n", remoteaddr.IP.String(), remoteaddr.Port)
-			for _, c := range responseConnections {
-				if c.Ip == remoteaddr.IP.String() {
-					remoteaddr.Port = c.ServerPort
+			for _, a := range responseAddresses {
+				if a.Ip == remoteaddr.IP.String() {
+					remoteaddr.Port = a.ServerPort
 				}
 			}
 			sendResponse(server, remoteaddr)
@@ -47,14 +46,16 @@ func (_ ConnectionUDP) RunServer(ip string, port int, responseConnections []conn
 }
 
 func sendResponse(conn *net.UDPConn, addr *net.UDPAddr) {
-	for _, pkt := range sniffer.Sniff() {
-		if _, err := conn.WriteToUDP([]byte(pkt), addr); err != nil {
-			fmt.Printf("Erro ao enviar a resposta: %v", err)
-			return
-		}
+	go func() {
+		for _, pkt := range sniffer.Sniff() {
+			if _, err := conn.WriteToUDP([]byte(pkt), addr); err != nil {
+				fmt.Printf("Erro ao enviar a resposta: %v", err)
+				return
+			}
 
-		fmt.Printf("Pacote enviado para o endereço %s:%d.\n", addr.IP, addr.Port)
-	}
+			fmt.Printf("Pacote enviado para o endereço %s:%d.\n", addr.IP, addr.Port)
+		}
+	}()
 }
 
 func printSniffedPackets(addr *net.UDPAddr, pkt string) {
