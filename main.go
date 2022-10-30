@@ -29,7 +29,7 @@ func main() {
 	wg.Add(1)
 
 	select {
-	case <-time.After(time.Second * 5):
+	case <-time.After(time.Second * 10):
 	}
 
 	for _, c := range clients {
