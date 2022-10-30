@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"net"
-	"os"
-	"strings"
 )
 
 func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
@@ -19,16 +17,15 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 
 	fmt.Printf("Comunicando-se com o endereço %s\n", connection.RemoteAddr())
 	for {
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print(">> ")
-		text, _ := reader.ReadString('\n')
-		fmt.Fprintf(connection, text+"\n")
+		fmt.Fprintf(connection, fmt.Sprintf("Oi eu sou %s", localAddr))
 
-		message, _ := bufio.NewReader(connection).ReadString('\n')
-		fmt.Print("->: " + message)
-		if strings.TrimSpace(string(text)) == "STOP" {
-			fmt.Println("TCP client exiting...")
-			return
+		if _, err := bufio.NewReader(connection).ReadString('\n'); err != nil {
+			fmt.Printf("Ocorreu um error: %v\n", err)
+			panic(err)
 		}
+		// if strings.TrimSpace(string(text)) == "STOP" {
+		// 	fmt.Println("TCP client exiting...")
+		// 	return
+		// }
 	}
 }
