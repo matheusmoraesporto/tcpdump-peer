@@ -36,7 +36,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 			return
 		}
 
-		fmt.Print("-> ", string(netData))
+		fmt.Print("MENSAGEM RECEBIDA: ", string(netData))
 		t := time.Now()
 		myTime := t.Format(time.RFC3339) + "\n"
 		connection.Write([]byte(myTime))
