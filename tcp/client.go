@@ -14,7 +14,7 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 		return
 	}
 
-	// defer connection.Close()
+	defer connection.Close()
 
 	// for {
 	// escrevendo a mensagem na conexão (socket)
