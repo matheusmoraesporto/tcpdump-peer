@@ -20,6 +20,6 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 	fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String()))
 
 	// ouvindo a resposta do servidor (eco)
-	bufio.NewReader(connection).ReadString('\n')
+	bufio.NewReader(connection) //.ReadString('\n')
 	// }
 }
