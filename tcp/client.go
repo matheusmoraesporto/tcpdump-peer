@@ -29,11 +29,11 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 		fmt.Fprintf(connection, texto+"\n")
 
 		// ouvindo a resposta do servidor (eco)
-		mensagem, err3 := bufio.NewReader(connection).ReadString('\n')
-		if err3 != nil {
-			fmt.Println(err3)
-		}
-		// escrevendo a resposta do servidor no terminal
-		fmt.Print("Resposta do servidor: " + mensagem)
+		bufio.NewReader(connection).ReadString('\n')
+		// if err3 != nil {
+		// 	fmt.Println(err3)
+		// }
+		// // escrevendo a resposta do servidor no terminal
+		// fmt.Print("Resposta do servidor: " + mensagem)
 	}
 }
