@@ -10,6 +10,7 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 	remoteAddr := HandleTCPAddress(ipRemote, portRemote)
 	connection, err := net.DialTCP("tcp", localAddr, remoteAddr)
 	if err != nil {
+		fmt.Println("deu erro aqui")
 		fmt.Println(err)
 		return
 	}
