@@ -18,13 +18,12 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 	fmt.Printf("Comunicando-se com o endereço %s\n", connection.RemoteAddr())
 	// for {
 	fmt.Fprintf(connection, fmt.Sprintf("Oi eu sou %s", localAddr))
+	fmt.Printf("connection | %v", connection)
 
-	x, err := bufio.NewReader(connection).ReadString('\n')
-	if err != nil {
+	if _, err := bufio.NewReader(connection).ReadString('\n'); err != nil {
 		fmt.Printf("Ocorreu um error: %v\n", err)
 		panic(err)
 	}
-	fmt.Println(x)
 	// if strings.TrimSpace(string(text)) == "STOP" {
 	// 	fmt.Println("TCP client exiting...")
 	// 	return
