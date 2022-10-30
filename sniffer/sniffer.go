@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	device          = "lo"
+	device          = "eth0"
 	defaultSnapLen  = 262144
 	lenSniffPackets = 10
 )
