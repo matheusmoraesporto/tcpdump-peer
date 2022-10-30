@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"net"
-	"strings"
-	"time"
 	"unisinos/redes-i/tgb/address"
 )
 
@@ -31,14 +29,6 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 			fmt.Println(err)
 			return
 		}
-		if strings.TrimSpace(string(netData)) == "STOP" {
-			fmt.Println("Exiting TCP server!")
-			return
-		}
-
 		fmt.Print("MENSAGEM RECEBIDA: ", string(netData))
-		t := time.Now()
-		myTime := t.Format(time.RFC3339) + "\n"
-		connection.Write([]byte(myTime))
 	}
 }
