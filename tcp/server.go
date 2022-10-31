@@ -20,11 +20,13 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 
 	for {
 		connection, err := listener.Accept()
+		fmt.Printf("Conexão estabelecida com %s\n", connection.RemoteAddr().String())
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
+		fmt.Printf("Aguardando o client escrever no buffer\n")
 		netData, err := bufio.NewReader(connection).ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
