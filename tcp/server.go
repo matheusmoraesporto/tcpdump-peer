@@ -19,7 +19,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 	fmt.Printf("Servidor executando no endereço %s\n", addr.String())
 
 	for {
-		connection, err := listener.Accept()
+		connection, err := listener.AcceptTCP()
 		fmt.Printf("Conexão estabelecida com %s\n", connection.RemoteAddr().String())
 		if err != nil {
 			fmt.Println(err)
