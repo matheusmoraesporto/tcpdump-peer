@@ -10,24 +10,29 @@ import (
 
 func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
 	addr := fmt.Sprintf("%s:%d", ipLocal, portLocal)
-	clientAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
+	localAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro: -> MakeSCTPAddr", err)
 		return
 	}
 
 	addr = fmt.Sprintf("%s:%d", ipRemote, portRemote)
-	serverAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
+	remoteAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro: -> MakeSCTPAddr", err)
 		return
 	}
 
 	initMsg := NewSCTPInitMessage()
-	conn, err := retryConnection(clientAddr, serverAddr, &initMsg)
+	conn, err := sctp.DialSCTP(SCTPNetowrk, localAddr, remoteAddr, &initMsg)
 	if err != nil {
+		fmt.Println("Erro -> DialSCTP:", err)
 		return
 	}
+	// conn, err := retryConnection(clientAddr, serverAddr, &initMsg)
+	// if err != nil {
+	// 	return
+	// }
 	defer conn.Close()
 
 	sendMessageToServer(conn)

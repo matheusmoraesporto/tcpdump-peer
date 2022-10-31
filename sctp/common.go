@@ -12,7 +12,7 @@ func NewSCTPInitMessage() sctp.SCTPInitMsg {
 	return sctp.SCTPInitMsg{
 		NumOutStreams:  0xffff,
 		MaxInStreams:   0,
-		MaxAttempts:    5,
+		MaxAttempts:    20,
 		MaxInitTimeout: 0,
 	}
 }
