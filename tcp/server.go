@@ -32,6 +32,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 			}
 			fmt.Print("MENSAGEM RECEBIDA: ", string(netData))
 			connection.Close()
+			break
 		}
 	}(connection)
 }
