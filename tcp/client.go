@@ -20,13 +20,11 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 
 	defer connection.Close()
 
-	// for {
 	// escrevendo a mensagem na conexão (socket)
-	fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String()))
-
-	// ouvindo a resposta do servidor (eco)
-	// bufio.NewReader(connection) //.ReadString('\n')
-	// }
+	if _, err := fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String())); err != nil {
+		fmt.Printf("Erro: %s\n", err)
+		return
+	}
 }
 
 func retryConnection(localAddr *net.TCPAddr, remoteAddr *net.TCPAddr) (*net.TCPConn, error) {
