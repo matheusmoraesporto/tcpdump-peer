@@ -45,12 +45,16 @@ func retryConnection(localAddr *net.TCPAddr, remoteAddr *net.TCPAddr) (*net.TCPC
 		select {
 		case <-timeout:
 			connection, err := retryfunc()
-
 			if err == nil {
 				return connection, err
 			}
 			return nil, errors.New("Máxima tentativa de conxões atingidas")
 		case <-time.After(retryPeriod):
+			connection, err := retryfunc()
+
+			if err == nil {
+				return connection, err
+			}
 		}
 	}
 }
