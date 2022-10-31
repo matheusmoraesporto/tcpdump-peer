@@ -38,5 +38,6 @@ func main() {
 		fmt.Printf("client para %s DONE\n", c.Ip)
 	}
 
+	fmt.Println("As mensagens já foram enviadas, a partir de agora, somente escutando pelo servidor")
 	wg.Wait()
 }
