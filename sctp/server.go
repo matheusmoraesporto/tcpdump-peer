@@ -1,7 +1,6 @@
 package sctp
 
 import (
-	"encoding/hex"
 	"fmt"
 	"syscall"
 	"unisinos/redes-i/tgb/address"
@@ -43,6 +42,7 @@ func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []addre
 }
 
 func handleClient(conn *sctp.SCTPConn) {
+	defer conn.Close()
 	data := make([]byte, 8192)
 	flag := 0
 
@@ -54,13 +54,12 @@ func handleClient(conn *sctp.SCTPConn) {
 			break
 		}
 		if len == 0 {
-			fmt.Println("Conexão encerrada!")
+			fmt.Println("Conexão com o endereço foi encerrada!")
 			break
 		} else {
 			fmt.Println(fmt.Sprintf("Rcvd %d bytes", len))
 			buffer := data[:len]
 			fmt.Println(string(buffer))
-			fmt.Println(hex.Dump(sctp.Pack(info)))
 		}
 	}
 }

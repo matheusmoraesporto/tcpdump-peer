@@ -24,9 +24,7 @@ func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemot
 	initMsg := NewSCTPInitMessage()
 	conn, err := sctp.DialSCTP(SCTPNetowrk, clientAddr, serverAddr, &initMsg)
 	if err != nil {
-		fmt.Printf("clientAddr = %v\nserverAddr = %v\n", clientAddr, serverAddr)
-		// TA DANDO ERRO AQUI
-		fmt.Println("deuErro:", err)
+		fmt.Println("Erro:", err)
 		return
 	}
 	defer conn.Close()
@@ -35,10 +33,9 @@ func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemot
 }
 
 func sendMessageToServer(conn *sctp.SCTPConn) {
-	length, err := conn.SendMsg([]byte("HELLO WORLD"), nil)
+	msg := fmt.Sprintf("Oi eu sou %s", conn.LocalAddr().String())
+	_, err := conn.SendMsg([]byte(msg), nil)
 	if err != nil {
 		fmt.Println("Erro:", err)
-	} else {
-		fmt.Printf("Sent %d bytes\n", length)
 	}
 }
