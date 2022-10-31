@@ -56,10 +56,8 @@ func handleClient(conn *sctp.SCTPConn) {
 		if len == 0 {
 			fmt.Println("Conexão com o endereço foi encerrada!")
 			break
-		} else {
-			fmt.Println(fmt.Sprintf("Rcvd %d bytes", len))
-			buffer := data[:len]
-			fmt.Println(string(buffer))
 		}
+		buffer := string(data[:len])
+		fmt.Println(buffer)
 	}
 }
