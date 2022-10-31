@@ -9,13 +9,11 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 	localAddr := HandleTCPAddress(ipLocal, portLocal)
 	remoteAddr := HandleTCPAddress(ipRemote, portRemote)
 
-	var connection *net.TCPConn
-	var err error
-	for {
-		connection, err = net.DialTCP("tcp", localAddr, remoteAddr)
-		if err == nil {
-			break
-		}
+	connection, err := net.DialTCP("tcp", localAddr, remoteAddr)
+	if err != nil {
+		fmt.Println("deu erro aqui")
+		fmt.Println(err)
+		return
 	}
 
 	defer connection.Close()
