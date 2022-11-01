@@ -58,6 +58,9 @@ func handleClient(conn *sctp.SCTPConn) {
 			break
 		}
 		buffer := string(data[:len])
-		fmt.Println(buffer)
+
+		fmt.Println("=============================================================")
+		fmt.Printf("Pacote sniffado e recebido pelo endereço: %s\n\n%s\n", conn.RemoteAddr().String(), buffer)
+		fmt.Println("=============================================================")
 	}
 }
