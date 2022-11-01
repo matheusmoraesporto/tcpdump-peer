@@ -43,6 +43,7 @@ func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []addre
 
 func handleClient(conn *sctp.SCTPConn) {
 	defer conn.Close()
+	remoteAddr := conn.RemoteAddr().String()
 	data := make([]byte, 8192)
 	flag := 0
 
@@ -54,13 +55,13 @@ func handleClient(conn *sctp.SCTPConn) {
 			break
 		}
 		if len == 0 {
-			fmt.Println("Conexão com o endereço foi encerrada!")
+			fmt.Printf("Conexão com o endereço %s foi encerrada!\n", remoteAddr)
 			break
 		}
 		buffer := string(data[:len])
 
 		fmt.Println("=============================================================")
-		fmt.Printf("Pacote sniffado e recebido pelo endereço: %s\n\n%s\n", conn.RemoteAddr().String(), buffer)
+		fmt.Printf("Pacote sniffado e recebido pelo endereço: %s\n\n%s\n", remoteAddr, buffer)
 		fmt.Println("=============================================================")
 	}
 }
