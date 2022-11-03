@@ -9,7 +9,7 @@ import (
 
 func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []address.Address) {
 	addr := HandleTCPAddress(ip, port)
-	listener, err := net.ListenTCP("tcp", addr)
+	listener, err := net.ListenTCP(TCPProtocol, addr)
 	if err != nil {
 		fmt.Println(err)
 		return
