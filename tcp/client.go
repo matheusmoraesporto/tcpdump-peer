@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-const msgAddressAlreadyInUse = "bind: address already in use"
-
 func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
 	localAddr := HandleTCPAddress(ipLocal, portLocal)
 	remoteAddr := HandleTCPAddress(ipRemote, portRemote)
@@ -18,7 +16,12 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 		return
 	}
 
-	defer connection.Close()
+	defer func() {
+		if err := connection.Close(); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+	}()
 
 	// escrevendo a mensagem na conexão (socket)
 	if _, err := fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String())); err != nil {
