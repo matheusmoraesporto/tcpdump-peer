@@ -8,7 +8,7 @@ import (
 )
 
 func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
-	localAddr := HandleTCPAddress(ipLocal, portLocal)
+	localAddr := HandleTCPAddress(ipLocal, portRemote)
 	remoteAddr := HandleTCPAddress(ipRemote, portRemote)
 
 	connection, err := retryConnection(localAddr, remoteAddr)
