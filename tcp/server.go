@@ -38,7 +38,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 			fmt.Println(err.Error())
 			return
 		} else {
-			fmt.Printf("Conexão encerrada com o client %s\n", clientaddr)
+			fmt.Printf("Server side: conexão encerrada com o client %s\n", clientaddr)
 		}
 	}
 }
