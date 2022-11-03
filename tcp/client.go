@@ -19,7 +19,8 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 	defer func() {
 		if err := connection.Close(); err != nil {
 			fmt.Println(err.Error())
-			return
+		} else {
+			fmt.Printf("Conexão encerrada com o endereço %s\n", remoteAddr.IP)
 		}
 	}()
 

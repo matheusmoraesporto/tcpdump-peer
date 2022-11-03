@@ -20,6 +20,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 
 	for {
 		connection, err := listener.AcceptTCP()
+		clientaddr := connection.RemoteAddr().String()
 		fmt.Printf("Conexão estabelecida com %s\n", connection.RemoteAddr().String())
 		if err != nil {
 			fmt.Println(err)
@@ -36,6 +37,8 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 		if err := connection.Close(); err != nil {
 			fmt.Println(err.Error())
 			return
+		} else {
+			fmt.Printf("Conexão encerrada com o client %s\n", clientaddr)
 		}
 	}
 }
