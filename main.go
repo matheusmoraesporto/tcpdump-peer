@@ -44,6 +44,7 @@ func requestSniff(protocol Protocol, localAddr address.Address, remotes []addres
 
 	for _, r := range remotes {
 		go func(r address.Address) {
+			defer wg.Done()
 			pkts := protocol.RunClient(localAddr.Ip, r.Ip, localAddr.ClientPort, r.ServerPort)
 			fmt.Printf("Solicitando pacotes para o servidor %s:%d\n", r.Ip, r.ClientPort)
 
