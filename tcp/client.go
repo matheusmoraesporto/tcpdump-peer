@@ -1,8 +1,8 @@
 package tcp
 
 import (
-	"bufio"
 	"fmt"
+	"io"
 	"net"
 )
 
@@ -28,13 +28,14 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 }
 
 func waitPackets(connection *net.TCPConn) (packets []string) {
+	buf := make([]byte, 1500)
 	for {
-		data, err := bufio.NewReader(connection).ReadString('\n')
+		_, err := io.ReadFull(connection, buf)
 		if err != nil {
 			fmt.Printf("Client side: Erro -> %s\n", err)
 			return nil
 		}
-		packets = append(packets, data)
+		packets = append(packets, string(buf))
 
 		if len(packets) == 10 {
 			break
