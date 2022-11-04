@@ -37,12 +37,4 @@ func sniffAndSend(connection *net.TCPConn) {
 			return
 		}
 	}
-
-	clientaddr := connection.RemoteAddr().String()
-	if err := connection.Close(); err != nil {
-		fmt.Println(err.Error())
-		return
-	} else {
-		fmt.Printf("Server side: conexão encerrada com o client %s\n", clientaddr)
-	}
 }
