@@ -24,8 +24,8 @@ func main() {
 	}
 
 	wg := new(sync.WaitGroup)
-	go protocol.RunServer(local.Ip, local.ServerPort, remotes)
 	wg.Add(1)
+	go protocol.RunServer(local.Ip, local.ServerPort, remotes)
 
 	select {
 	case <-time.After(time.Second * 10):
@@ -43,13 +43,18 @@ func requestSniff(protocol Protocol, localAddr address.Address, remotes []addres
 	for _, r := range remotes {
 		wg.Add(1)
 		go func(r address.Address) {
-			defer wg.Done()
+			defer func() {
+				fmt.Println("Entrou no defer")
+				wg.Done()
+				fmt.Println("Passou pelo wg.Done defer")
+			}()
 			pkts := protocol.RunClient(localAddr.Ip, r.Ip, localAddr.ClientPort, r.ServerPort)
 			fmt.Printf("Solicitando pacotes para o servidor %s:%d\n", r.Ip, r.ClientPort)
 
 			mut.Lock()
 			pktsByAddress[r.Ip] = pkts
 			mut.Unlock()
+			fmt.Println("Executou a última linha de comando da goroutine, deveria chamar o defer")
 		}(r)
 	}
 
