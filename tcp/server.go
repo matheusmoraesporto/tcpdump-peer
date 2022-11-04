@@ -30,6 +30,8 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 }
 
 func sniffAndSend(connection *net.TCPConn) {
+	defer connection.Close()
+
 	for i, pkt := range sniffer.Sniff() {
 		// escrevendo a mensagem na conexão (socket)
 		if _, err := connection.Write([]byte(pkt)); err != nil {
