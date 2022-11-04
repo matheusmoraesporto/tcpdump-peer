@@ -19,12 +19,12 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 
 	for {
 		connection, err := listener.AcceptTCP()
-		fmt.Printf("Conexão estabelecida com %s\n", connection.RemoteAddr().String())
 		if err != nil {
-			fmt.Println(err)
+			fmt.Printf("Server side: Erro -> %s\n", err)
 			return
 		}
 
+		fmt.Printf("Conexão estabelecida com %s\n", connection.RemoteAddr().String())
 		go sniffAndSend(connection)
 	}
 }
