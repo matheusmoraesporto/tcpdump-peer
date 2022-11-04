@@ -10,30 +10,30 @@ import (
 )
 
 func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []address.Address) {
-	staddr := fmt.Sprintf("%s:%d", ip, port)
-	addr, err := sctp.MakeSCTPAddr(SCTPNetowrk, staddr)
+	addr := fmt.Sprintf("%s:%d", ip, port)
+	SCTPAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro:", err)
 		return
 	}
 
 	initMsg := NewSCTPInitMessage()
-	server, err := sctp.ListenSCTP(SCTPNetowrk, syscall.SOCK_STREAM, addr, &initMsg)
+	listener, err := sctp.ListenSCTP(SCTPNetowrk, syscall.SOCK_STREAM, SCTPAddr, &initMsg)
 	if err != nil {
 		fmt.Println("Erro:", err)
 		return
 	}
-	defer server.Close()
-	fmt.Printf("Servidor executando no endereço %s\n", addr.String())
+	defer listener.Close()
+	fmt.Printf("Servidor executando no endereço %s\n", SCTPAddr.String())
 
 	for {
 		// Aguarda um conexão
-		conn, err := server.AcceptSCTP()
+		conn, err := listener.AcceptSCTP()
 		if err != nil {
 			fmt.Println("Error:", err)
 			continue
 		}
-		// Conexão encontrada
+
 		if remote := conn.RemoteAddr(); nil != remote {
 			fmt.Println("Server side: conexão estabelecida com o endereço:", remote)
 		}
