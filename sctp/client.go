@@ -42,8 +42,7 @@ func waitPackets(conn *sctp.SCTPConn) (packets []string) {
 		n, err := conn.RecvMsg(buffer, info, &flag)
 		if err != nil {
 			fmt.Println(err)
-		} else if info != nil && info.Flags == sctp.SCTP_SHUTDOWN_SENT {
-			fmt.Println("Recebeu a flag SCTP_SHUTDOWN_SENT") //TODO: remover
+		} else if n == 0 {
 			break
 		} else {
 			packets = append(packets, string(buffer[:n]))
