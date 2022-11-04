@@ -54,6 +54,6 @@ func sniffAndSentToClient(conn *sctp.SCTPConn) {
 	if err := conn.Close(); err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Printf("Client side: conexão encerrada com o endereço %s\n", remoteAddr)
+		fmt.Printf("Server side: conexão encerrada com o endereço %s\n", remoteAddr)
 	}
 }

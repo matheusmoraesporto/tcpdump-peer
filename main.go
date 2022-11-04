@@ -23,18 +23,28 @@ func main() {
 		return
 	}
 
-	var wg sync.WaitGroup
+	wg := new(sync.WaitGroup)
 	go protocol.RunServer(local.Ip, local.ServerPort, remotes)
+	wg.Add(1)
 
 	select {
 	case <-time.After(time.Second * 10):
 	}
 
+	pktsByAddress := requestSniff(protocol, local, remotes)
+	printReceivedData(pktsByAddress)
+
+	// Adiciona para deixar o terminal bloqueante, pois o server pode ainda receber alguma conexão
+	wg.Wait()
+}
+
+func requestSniff(protocol Protocol, localAddr address.Address, remotes []address.Address) (pktsByAddress map[string][]string) {
+	wg := new(sync.WaitGroup)
 	mut := new(sync.Mutex)
-	pktsByAddress := make(map[string][]string)
+
 	for _, r := range remotes {
 		go func(r address.Address) {
-			pkts := protocol.RunClient(local.Ip, r.Ip, local.ClientPort, r.ServerPort)
+			pkts := protocol.RunClient(localAddr.Ip, r.Ip, localAddr.ClientPort, r.ServerPort)
 			fmt.Printf("Solicitando pacotes para o servidor %s:%d\n", r.Ip, r.ClientPort)
 
 			mut.Lock()
@@ -46,12 +56,7 @@ func main() {
 	}
 
 	wg.Wait()
-
-	printReceivedData(pktsByAddress)
-
-	// Adiciona para deixar o terminal bloqueante, pois o server pode ainda receber alguma conexão
-	wg.Add(1)
-	wg.Wait()
+	return
 }
 
 func printReceivedData(packetsByAddress map[string][]string) {
