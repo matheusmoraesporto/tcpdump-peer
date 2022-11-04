@@ -1,6 +1,7 @@
 package tcp
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 )
@@ -23,15 +24,22 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 		}
 	}()
 
-	// escrevendo a mensagem na conexão (socket)
-	if _, err := fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String())); err != nil {
-		fmt.Printf("Client side: Erro -> %s\n", err)
-		return nil
-	}
+	return waitPackets(connection)
+}
 
+func waitPackets(connection *net.TCPConn) []string {
 	packets := make([]string, 10)
+	for {
+		data, err := bufio.NewReader(connection).ReadString('\n')
+		if err != nil {
+			fmt.Printf("Client side: Erro -> %s", err)
+			return nil
+		}
+		packets = append(packets, data)
 
-	// TODO: Adicionar um listener para o servidor, que receberá os pacotes
-
+		if len(packets) == 10 {
+			break
+		}
+	}
 	return packets
 }

@@ -1,10 +1,10 @@
 package tcp
 
 import (
-	"bufio"
 	"fmt"
 	"net"
 	"unisinos/redes-i/tgb/address"
+	"unisinos/redes-i/tgb/sniffer"
 )
 
 func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []address.Address) {
@@ -26,18 +26,23 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 			return
 		}
 
-		fmt.Printf("Aguardando o client escrever no buffer\n")
-		netData, err := bufio.NewReader(connection).ReadString('\n')
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Print("MENSAGEM RECEBIDA: ", string(netData))
+		sniffAndSend(connection)
+
 		if err := connection.Close(); err != nil {
 			fmt.Println(err.Error())
 			return
 		} else {
 			fmt.Printf("Server side: conexão encerrada com o client %s\n", clientaddr)
+		}
+	}
+}
+
+func sniffAndSend(connection *net.TCPConn) {
+	for _, pkt := range sniffer.Sniff() {
+		// escrevendo a mensagem na conexão (socket)
+		if _, err := fmt.Fprintf(connection, pkt); err != nil {
+			fmt.Printf("Client side: Erro -> %s\n", err)
+			return
 		}
 	}
 }
