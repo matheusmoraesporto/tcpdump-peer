@@ -38,6 +38,8 @@ func waitPackets(connection *net.TCPConn) (packets []string) {
 
 		if len(packets) == 10 {
 			break
+		} else {
+			fmt.Printf("packets len = %d\n", len(packets))
 		}
 	}
 	return packets
