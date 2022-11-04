@@ -3,6 +3,7 @@ package tcp
 import (
 	"fmt"
 	"net"
+	"time"
 	"unisinos/redes-i/tgb/address"
 	"unisinos/redes-i/tgb/sniffer"
 )
@@ -39,6 +40,10 @@ func sniffAndSend(connection *net.TCPConn) {
 			return
 		} else {
 			fmt.Printf("Enviado pacote %d\n", i)
+		}
+
+		select {
+		case <-time.After(time.Second * 2):
 		}
 	}
 }
