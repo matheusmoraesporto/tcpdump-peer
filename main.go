@@ -36,32 +36,26 @@ func main() {
 	wg.Wait()
 }
 
-func requestSniff(protocol Protocol, localAddr address.Address, remotes []address.Address) (pktsByAddress map[string][]string) {
+func requestSniff(protocol Protocol, localAddr address.Address, remotes []address.Address) map[string][]string {
+	pktsByAddress := make(map[string][]string)
 	wg := new(sync.WaitGroup)
 	mut := new(sync.Mutex)
 
 	for _, r := range remotes {
 		wg.Add(1)
 		go func(r address.Address) {
-			defer func() {
-				fmt.Println("Entrou no defer")
-				wg.Done()
-				fmt.Println("Passou pelo wg.Done defer")
-			}()
+			defer wg.Done()
 			pkts := protocol.RunClient(localAddr.Ip, r.Ip, localAddr.ClientPort, r.ServerPort)
 			fmt.Printf("Solicitando pacotes para o servidor %s:%d\n", r.Ip, r.ClientPort)
 
 			mut.Lock()
 			pktsByAddress[r.Ip] = pkts
 			mut.Unlock()
-			fmt.Println("Executou a última linha de comando da goroutine, deveria chamar o defer")
 		}(r)
 	}
 
-	fmt.Println("Aguardando os clients finalizarem")
 	wg.Wait()
-	fmt.Println("Clients finalizados")
-	return
+	return pktsByAddress
 }
 
 func printReceivedData(packetsByAddress map[string][]string) {
