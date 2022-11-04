@@ -33,8 +33,6 @@ func main() {
 
 	pktsByAddress := requestSniff(protocol, local, remotes)
 	printReceivedData(pktsByAddress)
-
-	// Adiciona para deixar o terminal bloqueante, pois o server pode ainda receber alguma conexão
 	wg.Wait()
 }
 
@@ -56,11 +54,14 @@ func requestSniff(protocol Protocol, localAddr address.Address, remotes []addres
 		wg.Add(1)
 	}
 
+	fmt.Println("Aguardando os clients finalizarem")
 	wg.Wait()
+	fmt.Println("Clients finalizados")
 	return
 }
 
 func printReceivedData(packetsByAddress map[string][]string) {
+	fmt.Println("Entrou no printReceivedData")
 	for addr, packets := range packetsByAddress {
 		fmt.Printf("Pacotes recebidos pelo endereço %s", addr)
 		fmt.Println("--------------------------------------------")
