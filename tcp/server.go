@@ -30,11 +30,13 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 }
 
 func sniffAndSend(connection *net.TCPConn) {
-	for _, pkt := range sniffer.Sniff() {
+	for i, pkt := range sniffer.Sniff() {
 		// escrevendo a mensagem na conexão (socket)
 		if _, err := connection.Write([]byte(pkt)); err != nil {
 			fmt.Printf("Client side: Erro -> %s\n", err)
 			return
+		} else {
+			fmt.Printf("Enviado pacote %d\n", i)
 		}
 	}
 }
