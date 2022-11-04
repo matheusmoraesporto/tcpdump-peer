@@ -19,21 +19,13 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 
 	for {
 		connection, err := listener.AcceptTCP()
-		clientaddr := connection.RemoteAddr().String()
 		fmt.Printf("Conexão estabelecida com %s\n", connection.RemoteAddr().String())
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		sniffAndSend(connection)
-
-		if err := connection.Close(); err != nil {
-			fmt.Println(err.Error())
-			return
-		} else {
-			fmt.Printf("Server side: conexão encerrada com o client %s\n", clientaddr)
-		}
+		go sniffAndSend(connection)
 	}
 }
 
@@ -44,5 +36,13 @@ func sniffAndSend(connection *net.TCPConn) {
 			fmt.Printf("Client side: Erro -> %s\n", err)
 			return
 		}
+	}
+
+	clientaddr := connection.RemoteAddr().String()
+	if err := connection.Close(); err != nil {
+		fmt.Println(err.Error())
+		return
+	} else {
+		fmt.Printf("Server side: conexão encerrada com o client %s\n", clientaddr)
 	}
 }
