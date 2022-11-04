@@ -59,9 +59,8 @@ func requestSniff(protocol Protocol, localAddr address.Address, remotes []addres
 }
 
 func printReceivedData(packetsByAddress map[string][]string) {
-	fmt.Println("Entrou no printReceivedData")
 	for addr, packets := range packetsByAddress {
-		fmt.Printf("Pacotes recebidos pelo endereço %s", addr)
+		fmt.Printf("\n\nPacotes recebidos pelo endereço %s\n", addr)
 		fmt.Println("--------------------------------------------")
 		for _, pkt := range packets {
 			fmt.Println(pkt)
