@@ -32,7 +32,7 @@ func waitPackets(connection *net.TCPConn) []string {
 	for {
 		data, err := bufio.NewReader(connection).ReadString('\n')
 		if err != nil {
-			fmt.Printf("Client side: Erro -> %s", err)
+			fmt.Printf("Client side: Erro -> %s\n", err)
 			return nil
 		}
 		packets = append(packets, data)
