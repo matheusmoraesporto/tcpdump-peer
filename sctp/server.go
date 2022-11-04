@@ -42,32 +42,8 @@ func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []addre
 	}
 }
 
-func handleClient(conn *sctp.SCTPConn) {
-	defer conn.Close()
-	remoteAddr := conn.RemoteAddr().String()
-	data := make([]byte, 8192)
-	flag := 0
-
-	for {
-		info := &sctp.SCTPSndRcvInfo{}
-		len, err := conn.RecvMsg(data, info, &flag)
-		if err != nil {
-			fmt.Println("Server side: Erro:", err)
-			break
-		}
-		if len == 0 {
-			fmt.Printf("Conexão com o endereço %s foi encerrada!\n", remoteAddr)
-			break
-		}
-		buffer := string(data[:len])
-
-		fmt.Println("=============================================================")
-		fmt.Printf("Pacote sniffado e recebido pelo endereço: %s\n\n%s\n", remoteAddr, buffer)
-		fmt.Println("=============================================================")
-	}
-}
-
 func sniffAndSentToClient(conn *sctp.SCTPConn) {
+	remoteAddr := conn.RemoteAddr().String()
 	for _, pkt := range sniffer.Sniff() {
 		_, err := conn.SendMsg([]byte(pkt), nil)
 		if err != nil {
@@ -75,10 +51,9 @@ func sniffAndSentToClient(conn *sctp.SCTPConn) {
 		}
 	}
 
-	infoEndConnection := sctp.SCTPSndRcvInfo{
-		Flags: sctp.SCTP_SHUTDOWN_SENT,
-	}
-	if _, err := conn.SendMsg([]byte(""), &infoEndConnection); err != nil {
-		fmt.Println(err)
+	if err := conn.Close(); err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Printf("Client side: conexão encerrada com o endereço %s\n", remoteAddr)
 	}
 }

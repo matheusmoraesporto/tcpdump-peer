@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"sync"
 	"time"
@@ -9,14 +8,14 @@ import (
 )
 
 func main() {
-	protocolFlag := flag.String("protocol", "", "")
-	flag.Parse()
+	// protocolFlag := flag.String("protocol", "", "")
+	// flag.Parse()
 
-	protocol := NewProtocol(*protocolFlag)
-	if protocol == nil {
-		fmt.Printf("Protocolo não identificado: %s\n", *protocolFlag)
-		return
-	}
+	protocol := NewProtocol("sctp")
+	// if protocol == nil {
+	// 	fmt.Printf("Protocolo não identificado: %s\n", *protocolFlag)
+	// 	return
+	// }
 
 	local, remotes, err := address.GetConnections("./address/addresses.json")
 	if err != nil {
