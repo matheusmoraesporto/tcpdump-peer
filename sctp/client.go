@@ -8,15 +8,15 @@ import (
 
 const lenBuffer = 1500
 
-func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) []string {
-	addr := fmt.Sprintf("%s:%d", ipLocal, portRemote)
+func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, port int) []string {
+	addr := fmt.Sprintf("%s:%d", ipLocal, port)
 	localAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Printf("Erro: -> %s\n", err)
 		return nil
 	}
 
-	addr = fmt.Sprintf("%s:%d", ipRemote, portRemote)
+	addr = fmt.Sprintf("%s:%d", ipRemote, port)
 	remoteAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Printf("Erro: -> %s\n", err)

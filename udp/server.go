@@ -35,7 +35,7 @@ func (_ ConnectionUDP) RunServer(ip string, port int, responseAddresses []addres
 			fmt.Printf("O endereço %s:%d solicitou sniffer de pacotes\n", remoteaddr.IP.String(), remoteaddr.Port)
 			for _, a := range responseAddresses {
 				if a.Ip == remoteaddr.IP.String() {
-					remoteaddr.Port = a.ServerPort
+					remoteaddr.Port = a.Port
 				}
 			}
 			sendResponse(server, remoteaddr)

@@ -6,9 +6,9 @@ import (
 	"net"
 )
 
-func (_ ConnectionUDP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) []string {
+func (_ ConnectionUDP) RunClient(ipLocal, ipRemote string, port int) []string {
 	buf := make([]byte, BufferLength)
-	netConn, err := net.Dial(UDP, fmt.Sprintf("%s:%d", ipRemote, portRemote))
+	netConn, err := net.Dial(UDP, fmt.Sprintf("%s:%d", ipRemote, port))
 	defer netConn.Close()
 	if err != nil {
 		fmt.Printf("Ocorreu um error: %v", err)

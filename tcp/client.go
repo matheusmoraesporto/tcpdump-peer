@@ -5,9 +5,9 @@ import (
 	"net"
 )
 
-func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) []string {
-	localAddr := HandleTCPAddress(ipLocal, portRemote)
-	remoteAddr := HandleTCPAddress(ipRemote, portRemote)
+func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
+	localAddr := HandleTCPAddress(ipLocal, port)
+	remoteAddr := HandleTCPAddress(ipRemote, port)
 
 	connection, err := net.DialTCP(TCPProtocol, localAddr, remoteAddr)
 	if err != nil {

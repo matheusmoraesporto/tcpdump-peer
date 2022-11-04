@@ -1,23 +1,30 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"sync"
 	"time"
 	"unisinos/redes-i/tgb/address"
 )
 
+const (
+	addressesFilePath      = "./address/addresses.json"
+	protocolFlag           = "protocol"
+	timeWaitToCreateServer = 10
+)
+
 func main() {
-	// protocolFlag := flag.String("protocol", "", "")
-	// flag.Parse()
+	flagValue := flag.String(protocolFlag, "", "")
+	flag.Parse()
 
-	protocol := NewProtocol("sctp")
-	// if protocol == nil {
-	// 	fmt.Printf("Protocolo não identificado: %s\n", *protocolFlag)
-	// 	return
-	// }
+	protocol := NewProtocol(*flagValue)
+	if protocol == nil {
+		fmt.Printf("Protocolo não identificado: %s\n", *flagValue)
+		return
+	}
 
-	local, remotes, err := address.GetConnections("./address/addresses.json")
+	local, remotes, err := address.GetAddresses(addressesFilePath)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -25,10 +32,10 @@ func main() {
 
 	wg := new(sync.WaitGroup)
 	wg.Add(1)
-	go protocol.RunServer(local.Ip, local.ServerPort, remotes)
+	go protocol.RunServer(local.Ip, local.Port, remotes)
 
 	select {
-	case <-time.After(time.Second * 10):
+	case <-time.After(time.Second * timeWaitToCreateServer):
 	}
 
 	pktsByAddress := requestSniff(protocol, local, remotes)
@@ -45,8 +52,8 @@ func requestSniff(protocol Protocol, localAddr address.Address, remotes []addres
 		wg.Add(1)
 		go func(r address.Address) {
 			defer wg.Done()
-			pkts := protocol.RunClient(localAddr.Ip, r.Ip, localAddr.ClientPort, r.ServerPort)
-			fmt.Printf("Solicitando pacotes para o servidor %s:%d\n", r.Ip, r.ClientPort)
+			pkts := protocol.RunClient(localAddr.Ip, r.Ip, r.Port)
+			fmt.Printf("Solicitando pacotes para o servidor %s:%d\n", r.Ip, r.Port)
 
 			mut.Lock()
 			pktsByAddress[r.Ip] = pkts

@@ -24,9 +24,9 @@ func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []addre
 		return
 	}
 	defer server.Close()
+	fmt.Printf("Servidor executando no endereço %s\n", addr.String())
 
 	for {
-		fmt.Printf("Servidor executando no endereço %s\n", addr.String())
 		// Aguarda um conexão
 		conn, err := server.AcceptSCTP()
 		if err != nil {
@@ -35,7 +35,7 @@ func (_ ConnectionSCTP) RunServer(ip string, port int, responseAddresses []addre
 		}
 		// Conexão encontrada
 		if remote := conn.RemoteAddr(); nil != remote {
-			fmt.Println("Conexão estabelecida com o endereço:", remote)
+			fmt.Println("Server side: conexão estabelecida com o endereço:", remote)
 		}
 		// obtém os dados recebidos do client
 		go sniffAndSentToClient(conn)

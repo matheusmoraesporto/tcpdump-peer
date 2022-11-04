@@ -15,7 +15,6 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 		return
 	}
 	defer listener.Close()
-
 	fmt.Printf("Servidor executando no endereço %s\n", addr.String())
 
 	for {
