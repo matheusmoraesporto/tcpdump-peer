@@ -6,25 +6,27 @@ import (
 	sctp "github.com/thebagchi/sctp-go"
 )
 
+const lenBuffer = 1500
+
 func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) []string {
 	addr := fmt.Sprintf("%s:%d", ipLocal, portRemote)
 	localAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
-		fmt.Println("Erro: -> MakeSCTPAddr", err)
+		fmt.Printf("Erro: -> %s\n", err)
 		return nil
 	}
 
 	addr = fmt.Sprintf("%s:%d", ipRemote, portRemote)
 	remoteAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
-		fmt.Println("Erro: -> MakeSCTPAddr", err)
+		fmt.Printf("Erro: -> %s\n", err)
 		return nil
 	}
 
 	initMsg := NewSCTPInitMessage()
 	conn, err := sctp.DialSCTP(SCTPNetowrk, localAddr, remoteAddr, &initMsg)
 	if err != nil {
-		fmt.Println("Erro -> DialSCTP:", err)
+		fmt.Printf("Erro: -> %s\n", err)
 		return nil
 	}
 
@@ -33,18 +35,18 @@ func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemot
 }
 
 func waitPackets(conn *sctp.SCTPConn) (packets []string) {
-	data := make([]byte, 8192)
+	buffer := make([]byte, lenBuffer)
 	flag := 0
 	for {
 		info := &sctp.SCTPSndRcvInfo{}
-		n, err := conn.RecvMsg(data, info, &flag)
-		fmt.Println(n)
+		n, err := conn.RecvMsg(buffer, info, &flag)
 		if err != nil {
 			fmt.Println(err)
 		} else if info != nil && info.Flags == sctp.SCTP_SHUTDOWN_SENT {
+			fmt.Println("Recebeu a flag SCTP_SHUTDOWN_SENT") //TODO: remover
 			break
 		} else {
-			packets = append(packets, string(data[:n]))
+			packets = append(packets, string(buffer[:n]))
 		}
 	}
 	return
