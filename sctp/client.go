@@ -4,34 +4,32 @@ import (
 	"errors"
 	"fmt"
 	"time"
-	"unisinos/redes-i/tgb/sniffer"
 
 	sctp "github.com/thebagchi/sctp-go"
 )
 
-func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
+func (_ ConnectionSCTP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) []string {
 	addr := fmt.Sprintf("%s:%d", ipLocal, portLocal)
 	localAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro: -> MakeSCTPAddr", err)
-		return
+		return nil
 	}
 
 	addr = fmt.Sprintf("%s:%d", ipRemote, portRemote)
 	remoteAddr, err := sctp.MakeSCTPAddr(SCTPNetowrk, addr)
 	if err != nil {
 		fmt.Println("Erro: -> MakeSCTPAddr", err)
-		return
+		return nil
 	}
 
 	initMsg := NewSCTPInitMessage()
 	conn, err := retryConnection(localAddr, remoteAddr, &initMsg)
 	if err != nil {
-		return
+		return nil
 	}
 	defer conn.Close()
-
-	sendMessageToServer(conn)
+	return waitPackets(conn)
 }
 
 func retryConnection(localAddr *sctp.SCTPAddr, remoteAddr *sctp.SCTPAddr, initMsg *sctp.SCTPInitMsg) (*sctp.SCTPConn, error) {
@@ -65,11 +63,20 @@ func retryConnection(localAddr *sctp.SCTPAddr, remoteAddr *sctp.SCTPAddr, initMs
 	}
 }
 
-func sendMessageToServer(conn *sctp.SCTPConn) {
-	for _, pkt := range sniffer.Sniff() {
-		_, err := conn.SendMsg([]byte(pkt), nil)
+func waitPackets(conn *sctp.SCTPConn) (packets []string) {
+	data := make([]byte, 8192)
+	flag := 0
+	for {
+		info := &sctp.SCTPSndRcvInfo{}
+		n, err := conn.RecvMsg(data, info, &flag)
+		fmt.Println(n)
 		if err != nil {
-			fmt.Println("Erro: -> sendMessageToServer", err)
+			fmt.Println(err)
+		} else if info != nil && info.Flags == sctp.SCTP_SHUTDOWN_SENT {
+			break
+		} else {
+			packets = append(packets, string(data[:n]))
 		}
 	}
+	return
 }

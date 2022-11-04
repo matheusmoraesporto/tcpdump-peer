@@ -5,14 +5,14 @@ import (
 	"net"
 )
 
-func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) {
+func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote int) []string {
 	localAddr := HandleTCPAddress(ipLocal, portRemote)
 	remoteAddr := HandleTCPAddress(ipRemote, portRemote)
 
 	connection, err := net.DialTCP(TCPProtocol, localAddr, remoteAddr)
 	if err != nil {
 		fmt.Printf("Client side: Errro -> %s\n", err)
-		return
+		return nil
 	}
 
 	defer func() {
@@ -26,6 +26,12 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, portLocal, portRemote
 	// escrevendo a mensagem na conexão (socket)
 	if _, err := fmt.Fprintf(connection, fmt.Sprintf("teste %s\n", localAddr.String())); err != nil {
 		fmt.Printf("Client side: Erro -> %s\n", err)
-		return
+		return nil
 	}
+
+	packets := make([]string, 10)
+
+	// TODO: Adicionar um listener para o servidor, que receberá os pacotes
+
+	return packets
 }
