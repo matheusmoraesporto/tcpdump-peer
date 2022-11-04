@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"unisinos/redes-i/tgb/address"
 	"unisinos/redes-i/tgb/sctp"
 	"unisinos/redes-i/tgb/tcp"
@@ -13,7 +14,7 @@ type Protocol interface {
 }
 
 func NewProtocol(flag string) (p Protocol) {
-	switch flag {
+	switch strings.ToLower(flag) {
 	case "tcp":
 		return tcp.ConnectionTCP{}
 	case "udp":

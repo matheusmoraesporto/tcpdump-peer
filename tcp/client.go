@@ -27,8 +27,7 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 	return waitPackets(connection)
 }
 
-func waitPackets(connection *net.TCPConn) []string {
-	packets := make([]string, 10)
+func waitPackets(connection *net.TCPConn) (packets []string) {
 	for {
 		data, err := bufio.NewReader(connection).ReadString('\n')
 		if err != nil {
