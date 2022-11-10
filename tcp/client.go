@@ -28,21 +28,18 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 }
 
 func waitPackets(connection *net.TCPConn) (packets []string) {
-	buf := make([]byte, 15000)
-	fmt.Println("Client: chamou o ReadFull")
+	buf := make([]byte, 15000) //TODO: Avaliar se vale a pena alterar esse buffer
 	n, err := connection.Read(buf)
-	fmt.Println("Client: passou do ReadFull")
+	fmt.Printf("%d\n", n)
 	if err != nil {
 		fmt.Printf("Client side: Erro -> %s\n", err)
 		return nil
 	}
 
-	fmt.Println("Client: chamou o Unmarshal")
 	if err := json.Unmarshal(buf[:n], &packets); err != nil {
 		fmt.Printf("Client side: Erro -> %s\n", err)
 		return nil
 	}
 
-	fmt.Println("Client: passou do Unmarshal e irá retornar os pacotes")
-	return packets
+	return
 }

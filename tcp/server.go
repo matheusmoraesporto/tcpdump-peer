@@ -34,7 +34,6 @@ func sniffAndSend(connection *net.TCPConn) {
 	// defer connection.Close()
 
 	pkts := sniffer.Sniff()
-	fmt.Printf("LEN PKTS = %d", len(pkts))
 	buffer, err := json.Marshal(pkts)
 	if err != nil {
 		fmt.Printf("Server side: Erro -> %s\n", err)
@@ -45,6 +44,4 @@ func sniffAndSend(connection *net.TCPConn) {
 		fmt.Printf("Server side: Erro -> %s\n", err)
 		return
 	}
-
-	fmt.Printf("Todos os pacotes foram enviados para %s\n", connection.RemoteAddr())
 }
