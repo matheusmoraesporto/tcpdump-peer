@@ -43,7 +43,7 @@ func sniffAndSend(connection *net.TCPConn) {
 		}
 
 		select {
-		case <-time.After(time.Second * 2):
+		case <-time.After(time.Second * 5):
 		}
 	}
 }
