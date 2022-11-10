@@ -41,9 +41,9 @@ func sniffAndSend(connection *net.TCPConn) {
 		} else {
 			fmt.Printf("Enviado pacote %d\n", i)
 		}
+	}
 
-		select {
-		case <-time.After(time.Second * 5):
-		}
+	select {
+	case <-time.After(time.Second * 5):
 	}
 }
