@@ -1,6 +1,7 @@
 package tcp
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net"
@@ -28,20 +29,17 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 }
 
 func waitPackets(connection *net.TCPConn) (packets []string) {
-	buf := make([]byte, 1500)
-	for {
-		_, err := io.ReadFull(connection, buf)
-		if err != nil {
-			fmt.Printf("Client side: Erro -> %s\n", err)
-			return nil
-		}
-		packets = append(packets, string(buf))
-
-		if len(packets) == 10 {
-			break
-		} else {
-			fmt.Printf("packets len = %d\n", len(packets))
-		}
+	buf := make([]byte, 15000)
+	_, err := io.ReadFull(connection, buf)
+	if err != nil {
+		fmt.Printf("Client side: Erro -> %s\n", err)
+		return nil
 	}
+
+	if err := json.Unmarshal(buf, &packets); err != nil {
+		fmt.Printf("Client side: Erro -> %s\n", err)
+		return nil
+	}
+
 	return packets
 }

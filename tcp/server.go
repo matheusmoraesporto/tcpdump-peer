@@ -1,9 +1,9 @@
 package tcp
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
-	"time"
 	"unisinos/redes-i/tgb/address"
 	"unisinos/redes-i/tgb/sniffer"
 )
@@ -33,17 +33,15 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 func sniffAndSend(connection *net.TCPConn) {
 	// defer connection.Close()
 
-	for i, pkt := range sniffer.Sniff() {
-		// escrevendo a mensagem na conexão (socket)
-		if _, err := connection.Write([]byte(pkt)); err != nil {
-			fmt.Printf("Server side: Erro -> %s\n", err)
-			return
-		} else {
-			fmt.Printf("Enviado pacote %d\n", i)
-		}
+	pkts := sniffer.Sniff()
+	buffer, err := json.Marshal(pkts)
+	if err != nil {
+		fmt.Printf("Server side: Erro -> %s\n", err)
+		return
+	}
 
-		select {
-		case <-time.After(time.Second * 5):
-		}
+	if _, err := connection.Write([]byte(buffer)); err != nil {
+		fmt.Printf("Server side: Erro -> %s\n", err)
+		return
 	}
 }
