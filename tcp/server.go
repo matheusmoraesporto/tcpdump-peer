@@ -44,4 +44,6 @@ func sniffAndSend(connection *net.TCPConn) {
 		fmt.Printf("Server side: Erro -> %s\n", err)
 		return
 	}
+
+	fmt.Printf("Todos os pacotes foram enviados para %s\n", connection.RemoteAddr())
 }
