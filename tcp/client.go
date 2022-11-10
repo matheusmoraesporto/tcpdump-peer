@@ -3,7 +3,6 @@ package tcp
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net"
 )
 
@@ -31,7 +30,7 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 func waitPackets(connection *net.TCPConn) (packets []string) {
 	buf := make([]byte, 15000)
 	fmt.Println("Client: chamou o ReadFull")
-	_, err := io.ReadFull(connection, buf)
+	_, err := connection.Read(buf)
 	fmt.Println("Client: passou do ReadFull")
 	if err != nil {
 		fmt.Printf("Client side: Erro -> %s\n", err)
