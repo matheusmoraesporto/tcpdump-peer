@@ -3,7 +3,8 @@ package tcp
 import (
 	"fmt"
 	"net"
-	"time"
+
+	// "time"
 	"unisinos/redes-i/tgb/address"
 	"unisinos/redes-i/tgb/sniffer"
 )
@@ -31,7 +32,7 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 }
 
 func sniffAndSend(connection *net.TCPConn) {
-	defer connection.Close()
+	// defer connection.Close()
 
 	for i, pkt := range sniffer.Sniff() {
 		// escrevendo a mensagem na conexão (socket)
@@ -43,7 +44,7 @@ func sniffAndSend(connection *net.TCPConn) {
 		}
 	}
 
-	select {
-	case <-time.After(time.Second * 5):
-	}
+	// select {
+	// case <-time.After(time.Second * 5):
+	// }
 }
