@@ -28,7 +28,7 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 }
 
 func waitPackets(connection *net.TCPConn) (packets []string) {
-	buf := make([]byte, 15000) //TODO: Avaliar se vale a pena alterar esse buffer
+	var buf []byte
 	n, err := connection.Read(buf)
 	fmt.Printf("%d\n", n)
 	if err != nil {
