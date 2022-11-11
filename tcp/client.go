@@ -28,9 +28,8 @@ func (_ ConnectionTCP) RunClient(ipLocal, ipRemote string, port int) []string {
 }
 
 func waitPackets(connection *net.TCPConn) (packets []string) {
-	var buf []byte
+	buf := make([]byte, 8000)
 	n, err := connection.Read(buf)
-	fmt.Printf("%d\n", n)
 	if err != nil {
 		fmt.Printf("Client side: Erro -> %s\n", err)
 		return nil
