@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"sync"
 	"time"
@@ -14,15 +15,14 @@ const (
 )
 
 func main() {
-	// flagValue := flag.String(protocolFlag, "", "")
-	// flag.Parse()
+	flagValue := flag.String(protocolFlag, "", "")
+	flag.Parse()
 
-	// protocol := NewProtocol(*flagValue)
-	protocol := NewProtocol("tcp")
-	// if protocol == nil {
-	// 	fmt.Printf("Protocolo não identificado: %s\n", *flagValue)
-	// 	return
-	// }
+	protocol := NewProtocol(*flagValue)
+	if protocol == nil {
+		fmt.Printf("Protocolo não identificado: %s\n", *flagValue)
+		return
+	}
 
 	local, remotes, err := address.GetAddresses(addressesFilePath)
 	if err != nil {

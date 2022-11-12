@@ -31,8 +31,6 @@ func (_ ConnectionTCP) RunServer(ip string, port int, responseAddresses []addres
 }
 
 func sniffAndSend(connection *net.TCPConn) {
-	// defer connection.Close()
-
 	pkts := sniffer.Sniff()
 	buffer, err := json.Marshal(pkts)
 	if err != nil {
