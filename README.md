@@ -12,10 +12,11 @@ Cada nodo terá um servidor rodando localmente, pois ele receberá as requisiç�
 ### Diagrama de funcionamento das comunicações entre os nodos
 ![Untitled-2022-10-23-2122](https://user-images.githubusercontent.com/47281681/201498244-0113ca51-e663-4197-8e10-d1338afc0b95.png)
 
+### Diagrama de funcionamento interno do nodo
+![Untitled-2022-10-23-2122](https://user-images.githubusercontent.com/47281681/201498445-19a03027-229c-4956-a685-03f95cd0210b.png)
 
 # Adicionar ou remover nodos
 O programa executa de acordo com os nodos configurados no arquivo `ADICIONAR O NOME DEPOIS.json`, onde devemos ter o endereço de ip da máquina e a porta que será utilizada para comunicação. É importante ressaltar que, por não ter um servidor centralizado, a maquina que estiver executando a aplicação, necessita ter o endereço registrado nesse arquivo.
-
 
 # Como executar
 
