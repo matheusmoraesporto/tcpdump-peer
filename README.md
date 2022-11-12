@@ -1,4 +1,4 @@
-## Sniffer de pacotes para N nodos
+# Sniffer de pacotes para N nodos
 
 Este é um trabalho acadêmico desenvolvido para a disciplina de Redes de computadores I, com o intuito de explorar e comparar os protocolos de transporte UDP, TCP e SCTP.
 
@@ -8,14 +8,16 @@ Cada nodo terá um servidor rodando localmente, pois ele receberá as requisiç�
 
 É importante lembrar que todas máquinas precisam estar rodando me paralelo para que a comunicação entre eleas flue corretamente, pois se uma das máquinas não estiver executando, não será possível obter os pacotes da mesma.
 
-# Diagramas
+## Diagramas
+### Diagrama de funcionamento das comunicações entre os nodos
+![Untitled-2022-10-23-2122](https://user-images.githubusercontent.com/47281681/201498244-0113ca51-e663-4197-8e10-d1338afc0b95.png)
 
 
-## Adicionar ou remover nodos
+# Adicionar ou remover nodos
 O programa executa de acordo com os nodos configurados no arquivo `ADICIONAR O NOME DEPOIS.json`, onde devemos ter o endereço de ip da máquina e a porta que será utilizada para comunicação. É importante ressaltar que, por não ter um servidor centralizado, a maquina que estiver executando a aplicação, necessita ter o endereço registrado nesse arquivo.
 
 
-## Como executar
+# Como executar
 
 Acessando a pasta raiz do repositório execute o seguinte comando, informando o protocolo desejado:
 **OBS:** Somente os protocolos UDP, TCP e SCTP foram implementados.
