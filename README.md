@@ -28,3 +28,5 @@ go run . -protocol <NOME_DO_PROTOCOLO>
 ````
 
 ## Análise do comportamento para os protocolos
+<img width="540" alt="Screenshot 2022-11-12 at 20 27 47" src="https://user-images.githubusercontent.com/47281681/201498583-7faa2333-f3b8-4815-b6ba-fced4412cfc5.png">
+<img width="512" alt="Screenshot 2022-11-12 at 20 27 07" src="https://user-images.githubusercontent.com/47281681/201498585-62f80ce3-84b3-457f-93fe-b03a0aa31aca.png">
