@@ -25,3 +25,6 @@ Acessando a pasta raiz do repositório execute o seguinte comando, informando o 
 
 ````
 go run . -protocol <NOME_DO_PROTOCOLO>
+````
+
+## Análise do comportamento para os protocolos
