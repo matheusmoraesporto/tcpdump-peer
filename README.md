@@ -16,7 +16,7 @@ Cada nodo terá um servidor rodando localmente, pois ele receberá as requisiç�
 ![Untitled-2022-10-23-2122](https://user-images.githubusercontent.com/47281681/201498445-19a03027-229c-4956-a685-03f95cd0210b.png)
 
 # Adicionar ou remover nodos
-O programa executa de acordo com os nodos configurados no arquivo `ADICIONAR O NOME DEPOIS.json`, onde devemos ter o endereço de ip da máquina e a porta que será utilizada para comunicação. É importante ressaltar que, por não ter um servidor centralizado, a maquina que estiver executando a aplicação, necessita ter o endereço registrado nesse arquivo.
+O programa executa de acordo com os nodos configurados no arquivo [tcpdump-peer/address/adress.json](https://github.com/matheusmoraesporto/tcpdump-peer/blob/main/address/addresses.json), onde devemos ter o endereço de ip da máquina e a porta que será utilizada para comunicação. É importante ressaltar que, por não ter um servidor centralizado, a maquina que estiver executando a aplicação, necessita ter o endereço registrado nesse arquivo.
 
 # Como executar
 
